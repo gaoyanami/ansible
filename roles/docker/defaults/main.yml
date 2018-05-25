@@ -1,0 +1,9 @@
+---
+# defaults file for docker
+docker_repo_baseurl: "https://download.docker.com/linux"
+docker_repo_gpgkey: "{{ docker_repo_baseurl }}/centos/gpg"
+
+
+docker_packages:
+ - "docker-ce-17.09*"
+ - "container-selinux*"

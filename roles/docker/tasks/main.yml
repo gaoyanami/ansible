@@ -1,0 +1,58 @@
+# tasks file for docker
+---
+- name: update resolv conf
+  copy:
+    content: |
+      nameserver 114.114.114.114
+    dest: /etc/resolv.conf
+
+- name: installing docker-ce repo
+  template:
+    src: docker-ce.repo.j2
+    dest: /etc/yum.repos.d/docker-ce.repo
+
+- name: import docker repo gpgkey
+  rpm_key:
+    key: "{{ docker_repo_gpgkey }}"
+  when: false
+
+- name: install docker packages
+  package:
+    name: "{{ item }}"
+  with_items: "{{ docker_packages }}"
+
+- name: create /etc/docker folder
+  file:
+    path: /etc/docker
+    state: directory
+
+- name: copy docker daemon.json file
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+  notify:
+    - restart docker service
+
+- name: create docker.service override folder
+  file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+
+- name: config docker.service override
+  copy:
+    content: |
+      [Service]
+      MountFlags=shared
+    dest: /etc/systemd/system/docker.service.d/kolla.conf
+  register: docker_service_config
+  notify:
+    - restart docker service
+
+- name: flush handlers
+  meta: flush_handlers
+
+- name: enable and start docker service
+  service:
+    name: docker
+    state: started
+    enabled: yes

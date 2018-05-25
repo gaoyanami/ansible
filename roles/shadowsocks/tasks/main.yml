@@ -1,0 +1,56 @@
+---
+# tasks file for shadowsocks
+
+- name: Install epel-release
+  yum: name=epel-release state=installed
+
+- name: Install python-pip
+  yum: name=python-pip state=installed
+
+- name: Install Shadowsocks Package
+  pip: name=shadowsocks, state=latest
+
+- name: Create Directory
+  file: path=/etc/shadowsocks state=directory
+
+- name: Create Shadowsocks.json
+  copy:
+    content: |
+      {
+        "server": "0.0.0.0",
+        "server_port": {{ server_port }},
+        "password": "{{ password }}",
+        "timeout": {{ timeout }},
+        "method": "aes-256-cfb",
+        "fast_open": false,
+        "workers": {{ workers }}
+      }
+    dest: /etc/shadowsocks/shadowsocks.json
+  notify:
+    - restart shadowsocks service
+
+- name: Create shadowsocks Servivce
+  copy:
+    content: |
+      [Unit]
+      Description=ShadowSocks Service
+
+      [Service]
+      Type=simple
+      ExecStart=/usr/bin/ssserver -c /etc/shadowsocks/shadowsocks.json start
+
+      [Install]
+      WantedBy=multi-user.target
+    dest: /etc/systemd/system/shadowsocks.service
+  notify:
+    - systemctl daemon-reload
+    - restart shadowsocks service
+
+- name: enable shadowsocks service
+  service: name=shadowsocks enabled=yes state=started
+  notify:
+    - systemctl daemon-reload
+    - restart shadowsocks service
+
+- name: Flush handlers
+  meta: flush_handlers

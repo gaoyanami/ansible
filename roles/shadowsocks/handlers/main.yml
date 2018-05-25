@@ -1,0 +1,9 @@
+---
+# handlers file for shadowsocks
+
+- name: systemctl daemon-reload
+  command: systemctl daemon-reload
+
+- name: restart shadowsocks service
+  service: name=shadowsocks state=restarted
+

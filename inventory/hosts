@@ -1,0 +1,8 @@
+[vps]
+67.216.197.241
+
+[docker]
+172.18.24.141
+
+[shadowsocks-server:children]
+vps

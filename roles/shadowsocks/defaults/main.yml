@@ -1,0 +1,7 @@
+---
+# defaults file for shadowsocks
+
+server_port: 10240
+password: "password"
+timeout: 300
+workers: 2
