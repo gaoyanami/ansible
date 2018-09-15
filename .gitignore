@@ -54,3 +54,5 @@ ansible/*.retry
 # Others
 .DS_Store
 .vimrc
+
+*.retry
