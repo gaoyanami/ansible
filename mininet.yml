@@ -1,0 +1,5 @@
+- hosts:
+    - mininet
+  remote_user: root
+  roles:
+    - mininet

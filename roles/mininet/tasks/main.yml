@@ -1,0 +1,15 @@
+---
+# tasks file for mininet
+
+- name: install git
+  package: name=git state=present
+
+- name: git clone mininet
+  git:
+    repo: "{{ mininet_repo }}"
+    dest: /opt/mininet
+    version: "{{ mininet_tag }}"
+
+- name: install mininet
+  command: bash /opt/mininet/util/install.sh
+  run_once: true

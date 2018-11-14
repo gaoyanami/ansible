@@ -1,0 +1,5 @@
+---
+# defaults file for mininet
+#
+mininet_repo: "https://github.com/mininet/mininet.git"
+mininet_tag: "2.2.2"
